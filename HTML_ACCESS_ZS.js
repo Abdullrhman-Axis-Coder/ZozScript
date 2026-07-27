@@ -2,7 +2,7 @@ const TokenTypes = {
     LeftParenthesis: 'LeftParenthesis',
     RightParenthesis: 'RightParenthesis',
     CurlyBraces: 'CurlyBraces',
-    AngleBrackets: 'AngleBrackets',H
+    AngleBrackets: 'AngleBrackets',
     AssignmentOperator: 'AssignmentOperator',
     BinaryOperator: 'BinaryOperator',
     Func: 'Func',
@@ -185,6 +185,8 @@ function tokenize(text) {
     return tokensArray; 
 }
 
+   
+
 
 //PARSER
 function parse(tokens) {
@@ -334,8 +336,7 @@ function parse(tokens) {
                 }
 
                 return node;
-            
-
+            }
 
             if (value === 'let' || value === 'announce') {
                 let node = {
@@ -392,60 +393,6 @@ function parse(tokens) {
                 type: 'Identifier',
                 name: token.value
             };
-        
-
-                current++;
-                while (current < tokens.length && tokens[current].type !== TokenTypes.RightParenthesis) {
-                    let beforeIndex = current;
-                    let argNode = walk();
-                    if (argNode) {
-                        node.arguments.push(argNode);
-                    }
-                    if (tokens[current] && tokens[current].type === TokenTypes.Comma) {
-                        current++;
-                    }
-                    if (current === beforeIndex) {
-                        current++;
-                    }
-                }
-                if (tokens[current] && tokens[current].type === TokenTypes.RightParenthesis) {
-                    current++;
-                }
-                return node;
-            }
-
-            let idNode = {
-                type: 'Identifier',
-                name: value
-            };
-
-                       if (tokens[current] && (tokens[current].type === TokenTypes.AssignmentOperator || (tokens[current].type === TokenTypes.BinaryOperator && tokens[current].value === '='))) {
-                current++;
-                let right = walk();
-                let node = {
-                    type: 'AssignmentExpression',
-                    name: idNode.name || idNode.value,
-                    value: right
-                };
-                return node;
-            }
-
-            while (tokens[current] && tokens[current].type === TokenTypes.BinaryOperator && tokens[current].value !== '=') {
-                let op = tokens[current].value;
-                current++;
-                
-                let right = walk();
-                if (!right) break;
-
-                idNode = {
-                    type: 'BinaryExpression',
-                    operator: op,
-                    left: idNode,
-                    right: right
-                };
-            }
-
-            return idNode;
         }
 
         if (token.type === TokenTypes.Func) {
@@ -525,13 +472,16 @@ function parse(tokens) {
         if (node) {
             ast.body.push(node);
         }
+
         if (current === beforeLoopIndex) {
             current++;
         }
     }
 
-    return ast;
+    return ast; 
 }
+
+
 
 
 
@@ -554,10 +504,9 @@ function codeGen(node) {
 
     if (node.type === 'CallExpression') {
         if (node.name === 'AI.getAnswer') {
-            const prompt = node.arguments ? codeGen(node.arguments) : '""';
+            const prompt = node.arguments && node.arguments[0] ? codeGen(node.arguments[0]) : '""';
             return `await fetch("http://localhost:3000/api/ai?prompt=" + encodeURIComponent(${prompt})).then(res => res.text())`;
         }
-
 
         if (node.name === 'web.write') {
             const id = node.arguments[0] ? codeGen(node.arguments[0]) : '""';
@@ -596,7 +545,7 @@ function codeGen(node) {
         }
         if (node.name === 'console.input') {
             const msg = node.arguments[0] ? codeGen(node.arguments[0]) : '""';
-            return `(() => { require('fs').writeSync(1, ${msg}); const buf = Buffer.alloc(1024); const n = require('fs').readSync(0, buf, 0, 1024, null); return buf.toString('utf8', 0, n).replace(/\\r?\\n$/, ''); })()`;
+            return `prompt(${msg})`;
         }
         if (node.name === 'lengthOf') {
             const msg = node.arguments[0] ? codeGen(node.arguments[0]) : '""';
@@ -628,9 +577,7 @@ function codeGen(node) {
             return `Math.floor(Math.random() * ${max}) + 1`;
         }
 
-
-
-        const argsCode = node.arguments.map(codeGen).join(', ');
+        const argsCode = node.arguments ? node.arguments.map(codeGen).join(', ') : '';
         return `${node.name}(${argsCode});`;
     }
 
@@ -666,14 +613,15 @@ function codeGen(node) {
         }
         return result;
     }
-    if (node.name === 'json.save') {
-            const fileName = node.arguments[0] ? codeGen(node.arguments[0]) : '"data.json"';
-            const dataObj = node.arguments[1] ? codeGen(node.arguments[1]) : '{}';
-            return `require('fs').writeFileSync(${fileName}, JSON.stringify(${dataObj}, null, 2));`;
+    
+        if (node.name === 'json.save') {
+        const fileName = node.arguments[0] ? codeGen(node.arguments[0]) : '"data.json"';
+        const dataObj = node.arguments[1] ? codeGen(node.arguments[1]) : '{}';
+        return `localStorage.setItem(${fileName}, JSON.stringify(${dataObj}));`;
     }
     if (node.name === 'json.load') {
         const fileName = node.arguments[0] ? codeGen(node.arguments[0]) : '"data.json"';
-        return `JSON.parse(require('fs').readFileSync(${fileName}, 'utf8'))`;
+        return `JSON.parse(localStorage.getItem(${fileName}) || '{}')`;
     }
     if (node.type === 'WhileStatement') {
         const body = node.body.map(codeGen).filter(Boolean).join('\n');
@@ -695,59 +643,7 @@ function codeGen(node) {
     return '';
 }
 
-const fs = require('fs');
-const { execSync } = require('child_process'); 
-
-const filePath = process.argv[2];
-
-if (!filePath) {
-    console.error('Error: Please provide a zozScript file path.');
-    process.exit(1);
-}
-
-try {
-    if (!fs.existsSync(filePath)) {
-        console.error(`Error: File "${filePath}" does not exist.`);
-        process.exit(1);
-    }
-
-    globalThis.zozUsesAI = false;
-
-    const sourceCode = fs.readFileSync(filePath, 'utf-8');
-    const tokens = tokenize(sourceCode);
-    const ast = parse(tokens);
-    
-    let generatedJS = codeGen(ast);
-
-    if (globalThis.zozUsesAI) {
-        generatedJS = `(async () => {\n${generatedJS}\n})();`;
-    }
-
-    let runtimeHeader = "";
-    if (globalThis.zozUsesAI) {
-        runtimeHeader += "const { AI } = require('./zozRunTime.js');\n\n";
-    }
-
-    const finalOutputJS = runtimeHeader + generatedJS;
-
-    fs.writeFileSync('output.js', finalOutputJS);
-    console.log('Successfully compiled code into output.js! 🎉');
-
-    const containsBrowserAPIs = sourceCode.includes('web.') || sourceCode.includes('send') || sourceCode.includes('getID');
-
-    if (containsBrowserAPIs) {
-        console.log('DOM API usage detected. Skipping local zozScript execution to prevent global window runtime errors.');
-    } else {
-        console.log('--------------------------------------------\nRunning Program:\n');
-        execSync('node output.js', { stdio: ['inherit', 'inherit', 'inherit'] });
-    }
-
-} catch (err) {
-    console.error('\nExecution or Compilation Error:', err.message);
-}
-
-
-//SETUP
+// SETUP: Browser automation layer
 function runZozInBrowser() {
     const scripts = document.querySelectorAll('zoz-script');
     scripts.forEach(scriptNode => {
@@ -757,8 +653,13 @@ function runZozInBrowser() {
             const ast = parse(tokens);
             const generatedJS = codeGen(ast);
             
-            const runBlock = new Function(generatedJS);
-            runBlock();
+            if (generatedJS.includes('await')) {
+                const runBlock = new Function(`return (async () => {\n${generatedJS}\n})();`);
+                runBlock();
+            } else {
+                const runBlock = new Function(generatedJS);
+                runBlock();
+            }
         } catch (err) {
             console.error("[zozScript Browser Error]:", err.message);
         }

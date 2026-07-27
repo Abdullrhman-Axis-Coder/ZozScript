@@ -1,0 +1,104 @@
+======================================================================
+                  zozScript Language Syntax Guide
+======================================================================
+
+1. DATA TYPES, LITERALS & COMMENTS
+----------------------------------------------------------------------
+Numbers:      Any whole number or decimal (e.g., 42, 3.14)
+Strings:      Text wrapped inside double quotes (e.g., "Hello World")
+Comments:     Suppressed lines or inline explanations using //
+              - Example: let x = 10 // This is a safe inline comment
+
+
+2. BUILT-IN FUNCTIONS & UTILITIES
+----------------------------------------------------------------------
+lengthOf(value)
+- Evaluates the size or character count of a given variable or string.
+- Example: let size = lengthOf("hello")
+
+web.write(id, text)
+- Finds an HTML element by its ID and updates its inner text content.
+- Example: web.write("header", "Welcome to my webpage")
+
+web.color(id, color)
+- Finds an HTML element by its ID and alters its style color.
+- Example: web.color("header", "blue")
+
+web.hide(id)
+- Instantly hides a targeted HTML element by setting display to none.
+- Example: web.hide("popup-box")
+
+web.show(id)
+- Reveals a hidden HTML element by setting display to block.
+- Example: web.show("popup-box")
+
+web.create(tag, parentId)
+- Dynamically constructs a new HTML tag and appends it inside a parent.
+- Example: web.create("p", "main-box")
+
+send(message)
+- Triggers a browser pop-up alert box displaying the message text.
+- Example: send("Form submitted successfully!")
+
+getID(id)
+- Directly grabs a reference to the HTML element matching the given ID.
+- Example: getID("main-box")
+
+console.print(data)
+- Logs values directly out into your system browser or node terminal.
+- Example: console.print("System operational")
+
+console.input(prompt)
+- Prepares a terminal input capture field for scanning values.
+- Example: console.input("Enter username")
+
+
+3. AI & STORAGE LIBRARIES
+----------------------------------------------------------------------
+AI.getAnswer(prompt)
+- Connects directly to Google Gemini to fetch smart AI text responses.
+- Example: announce reply to be AI.getAnswer("Explain coding")
+
+json.save(filename, data)
+- Permanently serializes and saves an active variable object to disk.
+- Example: json.save("users.json", username)
+
+json.load(filename)
+- Reads a local JSON file from disk and parses it back into a variable.
+- Example: let user = json.load("users.json")
+
+
+4. TYPE CASTERS
+----------------------------------------------------------------------
+binary(value)
+- Converts numbers or text strings into true/false boolean flags.
+- Example: let x = binary(1)
+
+number(value)
+- Converts text strings or booleans into standard numbers.
+- Example: let y = number("5")
+
+string(value)
+- Converts raw numbers or boolean states into text strings.
+- Example: let z = string(42)
+
+
+5. CONTROL FLOW & STRUCTURES
+----------------------------------------------------------------------
+Variable Declarations:  let [variable_name] = [value]
+                        announce [variable_name] to be [value]
+Loops:                  while [condition] { [body] }
+Conditions:             if [condition] { [body] }
+Function Blocks:        define-method [name]() { [body] }
+
+
+6. SEPARATORS & OPERATORS
+----------------------------------------------------------------------
+Parentheses:      ( ) used to envelop function execution arguments.
+Curly Braces:     { } used to isolate control structures or methods.
+Angle Brackets:   < > used to structure tag elements or logic equations.
+List Separator:   , used to delimit multiple values in parameters.
+Math Operators:   + - * / used for basic numerical calculations.
+
+let op = console.input("Choose an operator: ")
+let nextNumber = console.input("Enter a number: ")

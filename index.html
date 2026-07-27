@@ -1,0 +1,79 @@
+<!--after you open this website and install zoz.exe open any text editor then write your code in after you are done open your command prompt (CMD) and type in the following :
+zoz fileName -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>zozScript Official Site</title>
+</head>
+<body style="background-color: white; color: black; font-family: Arial; padding: 20px;">
+
+    <p style="color: gray; font-size: 10px;">V1</p>
+    
+    <h1 style="color: blue; margin-bottom: 5px;">zozScript</h1>
+    <p style="font-size: 18px; margin-top: 0;"><b>As simple as Python. As fast as JavaScript. Built different.</b></p>
+
+    <hr>
+
+    <h3>What is zozScript?</h3>
+    <p>zozScript is a general-purpose language made for the modern feature age. Legacy languages force you to write thousands of lines of code or download massive external packages just to do simple tasks. zozScript fixes this by making powerful features like native AI requests and permanent file storage part of the core language syntax rules.</p>
+    <p>It skips all the old academic boilerplate code. Your files transpile into clean, optimized code strings that run directly on Google's hyper-fast V8 engine. You get clean syntax without losing any hardware speed.</p>
+
+    <hr>
+
+    <h3>Example Code: Advanced Calculator</h3>
+    <p>Create a file called <code>calc.zoz</code> in Notepad and paste this code:</p>
+    
+    <table border="1" bgcolor="#f0f0f0" cellpadding="10" width="100%">
+        <tr>
+            <td>
+                <font face="Courier New">
+                    console.print("=========================================")<br>
+                    console.print("         zozScript Power Calc            ")<br>
+                    console.print("=========================================")<br>
+                    <br>
+                    let running = true<br>
+                    while running {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;console.print("-----------------------------------------")<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;let num1 = number(console.input("Enter first number: "))<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;let op = console.input("Choose operator (+, -, *, /) or type 'exit': ")<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if op == "exit" {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;running = false<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if running {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let num2 = number(console.input("Enter second number: "))<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if op == "+" { console.print("Result: " + string(num1 + num2)) }<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if op == "-" { console.print("Result: " + string(num1 - num2)) }<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if op == "*" { console.print("Result: " + string(num1 * num2)) }<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if op == "/" { console.print("Result: " + string(num1 / num2)) }<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br>
+                    <br>
+                    console.print("Calculator closed cleanly! 🎉")
+                </font>
+            </td>
+        </tr>
+    </table>
+
+    <hr>
+
+    <h3>Get the Language Compiler</h3>
+    <p>Click below to download the standalone installer executable binary:</p>
+    <a href="zoz.exe" download="zoz.exe" style="background-color: blue; color: white; padding: 12px 24px; font-weight: bold; text-decoration: none; display: inline-block; font-size: 18px; border: 2px solid darkblue;">DOWNLOAD ZOZ.EXE</a>
+    <p style="font-size: 12px; color: gray;">Runs natively on Windows x64 without needing a manual Node.js installation.</p>
+
+    <hr>
+
+    <h3>How to run it</h3>
+    <ol>
+        <li>Put <code>zoz.exe</code> in your project folder.</li>
+        <li>Open your standard command line (CMD).</li>
+        <li>Type this command:</li>
+    </ol>
+    <p style="background-color: #f0f0f0; padding: 5px; font-family: monospace; display: inline-block;">zoz calc.zoz</p>
+
+</body>
+</html>
